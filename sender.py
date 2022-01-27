@@ -5,10 +5,10 @@ import socket
 
 # (note, signal module not needed here because it behaves correctly)
 
-HOST = '127.0.0.1' 
+HOST = '192.168.1.100' 
 # 127.0.0.1 is the 'loopback' address, or the address
 # of your own computer
-PORT = 2000 
+PORT = 80 
 # this number is arbitrary as long as it is above 1024
 BUFFERSIZE = 1024 
 # this number is mostly arbitrary as long as it is big enough
@@ -22,5 +22,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         # start a loop to read from console and send all input over the socket
         message = str(input())
         # read input from console
-        s.sendall(str.encode(message))
+        if message == "wheel":
+            data = [0x23,0x00,0x12,0xf1,0xf3,0xe3,0x5b,0x9f,0x00]
+            cs = sum([x for x in data[2:8]])
+            print(cs)
+            data[8] = cs & 0xff
+            print(data[8])
+            s.sendall(bytes(data))
+        else:
+            s.sendall(str.encode(message))
         # encode the string as bytes and send it over the socket
