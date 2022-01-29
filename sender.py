@@ -29,6 +29,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             data[8] = cs & 0xff
             print(data[8])
             s.sendall(bytes(data))
+        elif message ==  "forward":
+            speed = 252
+            data = [0x23,0x00, 254, 254, 254, 254, 254, 254, 0x00]
+            data[2:8] = [speed] * 6
+            cs = sum([x for x in data[2:8]]) & 0xff
+            data[8] = cs
+            s.sendall(bytes(data))
+        elif message ==  "back":
+            data = [0x23,0x00, 0, 0, 0, 0, 0, 0, 0x00]
+            cs = sum([x for x in data[2:8]]) & 0xff
+            data[8] = cs
+            s.sendall(bytes(data))
+        elif message ==  "stop":
+            data = [0x23,0x00, 126, 126, 126, 126, 126, 126, 0x00]
+            cs = sum([x for x in data[2:8]]) & 0xff
+            data[8] = cs
+            s.sendall(bytes(data))
+        elif message ==  "ff":
+            data = [0x23,0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00]
+            cs = sum([x for x in data[2:8]]) & 0xff
+            data[8] = cs
+            s.sendall(bytes(data))
         else:
             s.sendall(str.encode(message))
         # encode the string as bytes and send it over the socket
